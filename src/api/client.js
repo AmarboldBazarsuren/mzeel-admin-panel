@@ -65,7 +65,8 @@ export const api = {
   getPendingVerificationLoans: (page) => 
     client.get(`/admin/loans/pending-verification?page=${page}`),
   startLoanReview: (id) => client.put(`/admin/loans/${id}/start-review`),
-
+getPendingDisbursementLoans: (page) => 
+  client.get(`/admin/loans/pending-disbursement?page=${page}`),
   // Loans
   getAllLoans: (page, status) => 
     client.get(`/loans/admin/all?page=${page}${status ? `&status=${status}` : ''}`),

@@ -19,7 +19,7 @@ import ProfileDetailPage from './pages/profiles/ProfileDetailPage';
 
 // ✅ ШИНЭ: Зээлийн мэдээлэл шалгуулах
 import PendingVerificationLoansPage from './pages/loans/PendingVerificationLoansPage';
-
+import PendingDisbursementLoansPage from './pages/loans/PendingDisbursementLoansPage'; // ✅ ШИНЭ
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -119,7 +119,16 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
+<Route
+  path="/loans/pending-disbursement"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <PendingDisbursementLoansPage />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
       <Route
         path="/loans"
         element={

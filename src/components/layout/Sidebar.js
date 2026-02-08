@@ -7,16 +7,16 @@ import './Sidebar.css';
 export default function Sidebar() {
   const location = useLocation();
 
-  const menuItems = [
-    { path: '/', icon: '📊', label: 'Dashboard' },
-    { path: '/users', icon: '👥', label: 'Хэрэглэгчид' },
-    { path: '/profiles/pending', icon: '📋', label: 'Profile шалгах' },
-    { path: '/loans/verification', icon: '💳', label: 'Зээл шалгуулах' },
-    { path: '/loans', icon: '💰', label: 'Зээлүүд' },
-    { path: '/withdrawals', icon: '💸', label: 'Татах хүсэлт' },
-    { path: '/transactions', icon: '📝', label: 'Гүйлгээ' },
-  ];
-
+const menuItems = [
+  { path: '/', icon: '📊', label: 'Dashboard' },
+  { path: '/users', icon: '👥', label: 'Хэрэглэгчид' },
+  { path: '/profiles/pending', icon: '📋', label: 'Profile шалгах' },
+  { path: '/loans/verification', icon: '💳', label: 'Зээл шалгуулах' },
+  { path: '/loans/pending-disbursement', icon: '🏦', label: 'Зээл авах хүсэлт' }, // ✅ ШИНЭ
+  { path: '/loans', icon: '💰', label: 'Зээлүүд' },
+  { path: '/withdrawals', icon: '💸', label: 'Татах хүсэлт' },
+  { path: '/transactions', icon: '📝', label: 'Гүйлгээ' },
+];
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
