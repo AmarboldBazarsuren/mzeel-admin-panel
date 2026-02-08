@@ -58,7 +58,7 @@ export const api = {
   // ✅ Profiles
   getPendingProfiles: (page) => client.get(`/admin/profiles/pending?page=${page}`),
   getProfileDetails: (id) => client.get(`/admin/profiles/${id}`),
-  verifyProfile: (id) => client.put(`/admin/profiles/${id}/verify`), // ✅ No data needed
+  verifyProfile: (id) => client.put(`/admin/profiles/${id}/verify`), // ✅ Body хоосон байх
   rejectProfile: (id, data) => client.put(`/admin/profiles/${id}/reject`, data),
 
   // ✅ Loan Verification
