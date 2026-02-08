@@ -71,6 +71,8 @@ export const api = {
     client.get(`/loans/admin/all?page=${page}${status ? `&status=${status}` : ''}`),
   getLoanDetails: (id) => client.get(`/loans/${id}`),
   approveLoan: (id, data) => client.put(`/loans/${id}/approve`, data),
+  approveLoanDisbursement: (id) => client.put(`/loans/${id}/approve-disbursement`),
+
   rejectLoan: (id, data) => client.put(`/loans/${id}/reject`, data),
 
   // Withdrawals

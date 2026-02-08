@@ -29,6 +29,8 @@ export const getLoanStatusText = (status) => {
     pending_verification: 'Баталгаажуулалт хүлээгдэж байна',
     under_review: 'Шалгаж байна',
     approved: 'Зөвшөөрөгдсөн',
+    pending_disbursement: 'Зээл олгох хүлээгдэж байна',
+
     disbursed: 'Олгогдсон',
     active: 'Идэвхтэй',
     paid: 'Төлөгдсөн',
@@ -43,6 +45,8 @@ export const getLoanStatusColor = (status) => {
     pending_verification: '#FFC107',
     under_review: '#FFC107',
     approved: '#4CAF50',
+    pending_disbursement: '#2196F3', // ✅ ШИНЭ: Цэнхэр
+
     disbursed: '#4CAF50',
     active: '#E53935',
     paid: '#4CAF50',

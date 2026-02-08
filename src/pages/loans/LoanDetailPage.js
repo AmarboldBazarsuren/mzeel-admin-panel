@@ -1,4 +1,4 @@
-// admin-panel/src/pages/loans/LoanDetailPage.js - ШИНЭЧИЛСЭН
+// admin-panel/src/pages/loans/LoanDetailPage.js - БҮРЭН ШИНЭЧИЛСЭН
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ export default function LoanDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loan, setLoan] = useState(null);
-  const [wallet, setWallet] = useState(null); // ✅ ШИНЭ
+  const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Approve modal
@@ -27,6 +27,9 @@ export default function LoanDetailPage() {
   const [rejectModal, setRejectModal] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [rejectLoading, setRejectLoading] = useState(false);
+
+  // ✅ ШИНЭ: Disbursement action loading
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     loadLoan();
@@ -40,7 +43,7 @@ export default function LoanDetailPage() {
       if (response.success) {
         setLoan(response.data.loan);
         
-        // ✅ Хэтэвчний мэдээлэл татах
+        // Хэтэвчний мэдээлэл татах
         const walletRes = await api.getUserWallet(response.data.loan.user._id);
         if (walletRes.success) {
           setWallet(walletRes.data.wallet);
@@ -113,6 +116,26 @@ export default function LoanDetailPage() {
     }
   };
 
+  // ✅ ШИНЭ: Зээл олгох (pending_disbursement -> disbursed)
+  const handleApproveDisbursement = async () => {
+    if (!window.confirm(`${formatCurrency(loan.approvedAmount)} зээл олгох уу?\n\nХэтэвчинд мөнгө шилжиж, зээлийн эрх багасна.`)) return;
+
+    try {
+      setActionLoading(true);
+      const response = await api.approveLoanDisbursement(id);
+
+      if (response.success) {
+        alert('Зээл амжилттай олгогдлоо');
+        loadLoan();
+      }
+    } catch (error) {
+      console.error('Approve disbursement error:', error);
+      alert(error.message || 'Алдаа гарлаа');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Ачааллаж байна...</div>;
   }
@@ -121,12 +144,14 @@ export default function LoanDetailPage() {
     if (status === 'paid') return 'success';
     if (status === 'overdue') return 'danger';
     if (status === 'approved' || status === 'disbursed') return 'success';
+    if (status === 'pending_disbursement') return 'info'; // ✅ ШИНЭ
     if (status === 'under_review' || status === 'pending_verification') return 'warning';
     return 'info';
   };
 
   const canApprove = loan.status === 'under_review';
   const canReject = ['pending_verification', 'under_review', 'approved'].includes(loan.status);
+  const canApproveDisbursement = loan.status === 'pending_disbursement'; // ✅ ШИНЭ
 
   return (
     <div className="loan-detail-page">
@@ -145,8 +170,18 @@ export default function LoanDetailPage() {
           </Badge>
         </div>
 
-        {(canApprove || canReject) && (
+        {/* ✅ ШИНЭЧИЛСЭН: Actions */}
+        {(canApprove || canReject || canApproveDisbursement) && (
           <div className="header-actions">
+            {canApproveDisbursement && (
+              <Button 
+                variant="success" 
+                onClick={handleApproveDisbursement}
+                loading={actionLoading}
+              >
+                💰 Зээл олгох
+              </Button>
+            )}
             {canApprove && (
               <Button variant="success" onClick={() => setApproveModal(true)}>
                 ✓ Зөвшөөрөх
@@ -184,7 +219,7 @@ export default function LoanDetailPage() {
           </div>
         </Card>
 
-        {/* ✅ ШИНЭ: Хэтэвчний мэдээлэл */}
+        {/* Хэтэвчний мэдээлэл */}
         {wallet && (
           <Card title="Хэтэвчний мэдээлэл">
             <div className="info-grid">
@@ -366,7 +401,7 @@ export default function LoanDetailPage() {
         />
 
         <p style={{ fontSize: '13px', color: '#666', marginTop: '8px' }}>
-          ℹ️ Хамгийн багадаа 10,000₮, хамгийн ихдээ 500,000₮
+          ℹ️ Хамгийн багадаа 10,000₮, хамгийн ихдээ 5,000,000₮
         </p>
       </Modal>
 
