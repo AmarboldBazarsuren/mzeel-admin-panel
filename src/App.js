@@ -13,6 +13,13 @@ import LoanDetailPage from './pages/loans/LoanDetailPage';
 import WithdrawalsPage from './pages/withdrawals/WithdrawalsPage';
 import TransactionsPage from './pages/transactions/TransactionsPage';
 
+// ✅ ШИНЭ: Profile баталгаажуулалт
+import PendingProfilesPage from './pages/profiles/PendingProfilesPage';
+import ProfileDetailPage from './pages/profiles/ProfileDetailPage';
+
+// ✅ ШИНЭ: Зээлийн мэдээлэл шалгуулах
+import PendingVerificationLoansPage from './pages/loans/PendingVerificationLoansPage';
+
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -73,6 +80,41 @@ function AppRoutes() {
           <ProtectedRoute>
             <Layout>
               <UserDetailPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ✅ ШИНЭ: Profile routes */}
+      <Route
+        path="/profiles/pending"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PendingProfilesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profiles/:id"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ProfileDetailPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ✅ ШИНЭ: Зээлийн мэдээлэл шалгуулах */}
+      <Route
+        path="/loans/verification"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <PendingVerificationLoansPage />
             </Layout>
           </ProtectedRoute>
         }

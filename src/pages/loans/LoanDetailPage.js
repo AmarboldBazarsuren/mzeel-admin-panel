@@ -1,4 +1,4 @@
-// admin-panel/src/pages/loans/LoanDetailPage.js
+// admin-panel/src/pages/loans/LoanDetailPage.js - ШИНЭЧИЛСЭН
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ export default function LoanDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loan, setLoan] = useState(null);
+  const [wallet, setWallet] = useState(null); // ✅ ШИНЭ
   const [loading, setLoading] = useState(true);
 
   // Approve modal
@@ -38,6 +39,13 @@ export default function LoanDetailPage() {
 
       if (response.success) {
         setLoan(response.data.loan);
+        
+        // ✅ Хэтэвчний мэдээлэл татах
+        const walletRes = await api.getUserWallet(response.data.loan.user._id);
+        if (walletRes.success) {
+          setWallet(walletRes.data.wallet);
+        }
+        
         setApproveAmount(String(response.data.loan.requestedAmount || 100000));
       }
     } catch (error) {
@@ -175,6 +183,34 @@ export default function LoanDetailPage() {
             </div>
           </div>
         </Card>
+
+        {/* ✅ ШИНЭ: Хэтэвчний мэдээлэл */}
+        {wallet && (
+          <Card title="Хэтэвчний мэдээлэл">
+            <div className="info-grid">
+              <div className="info-item">
+                <span className="info-label">Үлдэгдэл</span>
+                <span className="info-value amount success">
+                  {formatCurrency(wallet.balance)}
+                </span>
+              </div>
+
+              <div className="info-item">
+                <span className="info-label">Нийт цэнэглэлт</span>
+                <span className="info-value">
+                  {formatCurrency(wallet.totalDeposit)}
+                </span>
+              </div>
+
+              <div className="info-item">
+                <span className="info-label">Нийт зарцуулалт</span>
+                <span className="info-value">
+                  {formatCurrency(wallet.totalSpent || 0)}
+                </span>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Loan Info */}
         <Card title="Зээлийн мэдээлэл">
@@ -317,7 +353,7 @@ export default function LoanDetailPage() {
         }
       >
         <p style={{ marginBottom: '16px', color: '#666' }}>
-          Зээлийн дүнгээ оруулна уу. Хэрэглэгч дүнгээ сонгож авна.
+          Зээлийн дүнгээ оруулна уу. Хэрэглэгч энэ дүнг олж авна.
         </p>
 
         <Input

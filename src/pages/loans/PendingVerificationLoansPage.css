@@ -1,0 +1,58 @@
+/* admin-panel/src/pages/loans/PendingVerificationLoansPage.css */
+
+.pending-verification-loans-page {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-heading {
+  margin: 0 0 8px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 18px;
+  color: #666;
+}
+
+.pagination {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.page-info {
+  font-size: 14px;
+  color: #666;
+  min-width: 60px;
+  text-align: center;
+}
+
+.user-name-small {
+  font-weight: 600;
+  color: #1A1A2E;
+  margin-bottom: 2px;
+}
+
+.user-phone-small {
+  font-size: 12px;
+  color: #666;
+}
