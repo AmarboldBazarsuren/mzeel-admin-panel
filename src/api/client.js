@@ -53,6 +53,18 @@ export const api = {
     client.get(`/admin/users?page=${page}${search ? `&search=${search}` : ''}`),
   getUserDetails: (id) => client.get(`/admin/users/${id}`),
   toggleUserStatus: (id) => client.put(`/admin/users/${id}/toggle-status`),
+  getUserWallet: (id) => client.get(`/admin/users/${id}/wallet`),
+
+  // ✅ Profiles
+  getPendingProfiles: (page) => client.get(`/admin/profiles/pending?page=${page}`),
+  getProfileDetails: (id) => client.get(`/admin/profiles/${id}`),
+  verifyProfile: (id) => client.put(`/admin/profiles/${id}/verify`), // ✅ No data needed
+  rejectProfile: (id, data) => client.put(`/admin/profiles/${id}/reject`, data),
+
+  // ✅ Loan Verification
+  getPendingVerificationLoans: (page) => 
+    client.get(`/admin/loans/pending-verification?page=${page}`),
+  startLoanReview: (id) => client.put(`/admin/loans/${id}/start-review`),
 
   // Loans
   getAllLoans: (page, status) => 

@@ -10,8 +10,10 @@ export default function Sidebar() {
   const menuItems = [
     { path: '/', icon: '📊', label: 'Dashboard' },
     { path: '/users', icon: '👥', label: 'Хэрэглэгчид' },
-    { path: '/loans', icon: '💳', label: 'Зээлүүд' },
-    { path: '/withdrawals', icon: '💰', label: 'Татах хүсэлт' },
+    { path: '/profiles/pending', icon: '📋', label: 'Profile шалгах' },
+    { path: '/loans/verification', icon: '💳', label: 'Зээл шалгуулах' },
+    { path: '/loans', icon: '💰', label: 'Зээлүүд' },
+    { path: '/withdrawals', icon: '💸', label: 'Татах хүсэлт' },
     { path: '/transactions', icon: '📝', label: 'Гүйлгээ' },
   ];
 

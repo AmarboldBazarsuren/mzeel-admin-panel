@@ -19,8 +19,12 @@ export default function ProfileDetailPage() {
 
   // Approve modal
   const [approveModal, setApproveModal] = useState(false);
-  const [loanLimit, setLoanLimit] = useState('500000'); // Default 500k
   const [approveLoading, setApproveLoading] = useState(false);
+
+  // Reject modal
+  const [rejectModal, setRejectModal] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectLoading, setRejectLoading] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -44,18 +48,11 @@ export default function ProfileDetailPage() {
   };
 
   const handleApprove = async () => {
-    const amount = parseInt(loanLimit);
-
-    if (!amount || amount < 10000 || amount > 5000000) {
-      alert('Зээлийн эрх 10,000₮ - 5,000,000₮ хооронд байх ёстой');
-      return;
-    }
-
-    if (!window.confirm(`${amount.toLocaleString()}₮ зээлийн эрх өгөх үү?`)) return;
+    if (!window.confirm('Profile баталгаажуулах уу?')) return;
 
     try {
       setApproveLoading(true);
-      const response = await api.verifyProfile(id, { loanLimit: amount });
+      const response = await api.verifyProfile(id);
 
       if (response.success) {
         alert('Profile амжилттай баталгаажлаа');
@@ -71,18 +68,27 @@ export default function ProfileDetailPage() {
   };
 
   const handleReject = async () => {
+    if (!rejectReason.trim()) {
+      alert('Татгалзах шалтгаанаа бичнэ үү');
+      return;
+    }
+
     if (!window.confirm('Profile татгалзах уу?')) return;
 
     try {
-      const response = await api.rejectProfile(id);
+      setRejectLoading(true);
+      const response = await api.rejectProfile(id, { reason: rejectReason });
 
       if (response.success) {
         alert('Profile татгалзагдлаа');
+        setRejectModal(false);
         navigate('/profiles/pending');
       }
     } catch (error) {
       console.error('Reject error:', error);
       alert(error.message || 'Алдаа гарлаа');
+    } finally {
+      setRejectLoading(false);
     }
   };
 
@@ -124,29 +130,129 @@ export default function ProfileDetailPage() {
               <span className="info-label">Регистр</span>
               <span className="info-value">{profile.registerNumber}</span>
             </div>
+
+            <div className="info-item">
+              <span className="info-label">Төрсөн өдөр</span>
+              <span className="info-value">{formatDate(profile.dateOfBirth)}</span>
+            </div>
+
+            <div className="info-item">
+              <span className="info-label">Хүйс</span>
+              <span className="info-value">
+                {profile.gender === 'male' ? 'Эрэгтэй' : 'Эмэгтэй'}
+              </span>
+            </div>
           </div>
         </Card>
 
-        {/* Bank Info */}
-        <Card title="Банкны мэдээлэл">
+        {/* Address */}
+        <Card title="Гэрийн хаяг">
           <div className="info-grid">
             <div className="info-item">
-              <span className="info-label">Банк</span>
-              <span className="info-value">{profile.bankAccount.bankName}</span>
+              <span className="info-label">Хот/Аймаг</span>
+              <span className="info-value">{profile.address.city}</span>
             </div>
 
             <div className="info-item">
-              <span className="info-label">Дансны дугаар</span>
-              <span className="info-value">{profile.bankAccount.accountNumber}</span>
+              <span className="info-label">Дүүрэг/Сум</span>
+              <span className="info-value">{profile.address.district}</span>
             </div>
 
-            <div className="info-item">
-              <span className="info-label">Эзэмшигч</span>
-              <span className="info-value">{profile.bankAccount.accountName}</span>
-            </div>
+            {profile.address.khoroo && (
+              <div className="info-item">
+                <span className="info-label">Хороо</span>
+                <span className="info-value">{profile.address.khoroo}</span>
+              </div>
+            )}
+
+            {profile.address.street && (
+              <div className="info-item">
+                <span className="info-label">Гудамж</span>
+                <span className="info-value">{profile.address.street}</span>
+              </div>
+            )}
           </div>
         </Card>
       </div>
+
+      {/* Emergency Contact */}
+      <Card title="Яаралтай холбоо барих">
+        <div className="info-grid">
+          <div className="info-item">
+            <span className="info-label">Нэр</span>
+            <span className="info-value">{profile.emergencyContact.name}</span>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Хамаарал</span>
+            <span className="info-value">{profile.emergencyContact.relationship}</span>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Утас</span>
+            <span className="info-value">{profile.emergencyContact.phone}</span>
+          </div>
+        </div>
+      </Card>
+
+      {/* Employment */}
+      {profile.employment && (
+        <Card title="Ажлын мэдээлэл">
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">Төлөв</span>
+              <span className="info-value">
+                {profile.employment.status === 'employed' ? 'Ажилтай' :
+                 profile.employment.status === 'self-employed' ? 'Хувиараа' :
+                 profile.employment.status === 'student' ? 'Оюутан' : 'Ажилгүй'}
+              </span>
+            </div>
+
+            {profile.employment.companyName && (
+              <div className="info-item">
+                <span className="info-label">Байгууллага</span>
+                <span className="info-value">{profile.employment.companyName}</span>
+              </div>
+            )}
+
+            {profile.employment.position && (
+              <div className="info-item">
+                <span className="info-label">Албан тушаал</span>
+                <span className="info-value">{profile.employment.position}</span>
+              </div>
+            )}
+
+            {profile.employment.monthlyIncome > 0 && (
+              <div className="info-item">
+                <span className="info-label">Сарын орлого</span>
+                <span className="info-value">
+                  {profile.employment.monthlyIncome.toLocaleString()}₮
+                </span>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* Bank Account */}
+      <Card title="Банкны мэдээлэл">
+        <div className="info-grid">
+          <div className="info-item">
+            <span className="info-label">Банк</span>
+            <span className="info-value">{profile.bankAccount.bankName}</span>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Дансны дугаар</span>
+            <span className="info-value">{profile.bankAccount.accountNumber}</span>
+          </div>
+
+          <div className="info-item">
+            <span className="info-label">Эзэмшигч</span>
+            <span className="info-value">{profile.bankAccount.accountName}</span>
+          </div>
+        </div>
+      </Card>
 
       {/* Documents - Зургууд */}
       <Card title="Баримт бичиг">
@@ -187,13 +293,26 @@ export default function ProfileDetailPage() {
             ✓ Баталгаажуулах
           </Button>
 
-          <Button variant="danger" onClick={handleReject}>
+          <Button variant="danger" onClick={() => setRejectModal(true)}>
             ✕ Татгалзах
           </Button>
         </div>
       )}
 
-      {/* Approve Modal */}
+      {profile.isVerified && (
+        <Card>
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <Badge variant="success">Баталгаажсан</Badge>
+            {profile.verifiedAt && (
+              <p style={{ marginTop: '8px', color: '#666' }}>
+                {formatDate(profile.verifiedAt)}
+              </p>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* Approve Modal - Simplified */}
       <Modal
         isOpen={approveModal}
         onClose={() => setApproveModal(false)}
@@ -209,22 +328,40 @@ export default function ProfileDetailPage() {
           </>
         }
       >
+        <p style={{ color: '#666' }}>
+          Энэ хэрэглэгчийн profile-ийг баталгаажуулах уу?
+          <br /><br />
+          Баталгаажуулсны дараа тэр зээлийн мэдээлэл шалгуулах боломжтой болно.
+        </p>
+      </Modal>
+
+      {/* Reject Modal */}
+      <Modal
+        isOpen={rejectModal}
+        onClose={() => setRejectModal(false)}
+        title="Profile татгалзах"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setRejectModal(false)}>
+              Болих
+            </Button>
+            <Button variant="danger" onClick={handleReject} loading={rejectLoading}>
+              Татгалзах
+            </Button>
+          </>
+        }
+      >
         <p style={{ marginBottom: '16px', color: '#666' }}>
-          Энэ хэрэглэгчид хэдэн төгрөгийн зээлийн эрх өгөх вэ?
+          Татгалзах шалтгаанаа бичнэ үү (хэрэглэгчид харагдана)
         </p>
 
         <Input
-          label="Зээлийн дээд эрх (₮)"
-          type="number"
-          value={loanLimit}
-          onChange={(e) => setLoanLimit(e.target.value)}
-          placeholder="500000"
+          label="Шалтгаан"
+          value={rejectReason}
+          onChange={(e) => setRejectReason(e.target.value)}
+          placeholder="Жишээ: Регистрийн дугаар буруу, зураг тодорхойгүй гэх мэт..."
           required
         />
-
-        <p style={{ fontSize: '13px', color: '#666', marginTop: '8px' }}>
-          ℹ️ Жишээ: 500,000₮ гэвэл хэрэглэгч дээд тал нь 500,000₮ зээл авна
-        </p>
       </Modal>
     </div>
   );
