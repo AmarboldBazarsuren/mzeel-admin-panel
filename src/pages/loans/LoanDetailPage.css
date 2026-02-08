@@ -1,0 +1,82 @@
+/* admin-panel/src/pages/loans/LoanDetailPage.css */
+
+.loan-detail-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.loan-header-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+}
+
+.loan-number {
+  margin: 0 0 12px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.info-value.amount {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.info-value.amount.success {
+  color: #4CAF50;
+}
+
+.info-value.amount.danger {
+  color: #E53935;
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-value {
+  font-size: 15px;
+  color: #1A1A2E;
+  font-weight: 600;
+}
+
+.admin-notes,
+.rejection-reason {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rejection-reason {
+  background: #FFEBEE;
+  color: #C62828;
+}

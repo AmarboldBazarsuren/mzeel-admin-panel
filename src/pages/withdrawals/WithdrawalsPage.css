@@ -1,0 +1,57 @@
+/* admin-panel/src/pages/withdrawals/WithdrawalsPage.css */
+
+.withdrawals-page {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.withdrawal-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-section {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A1A2E;
+}
+
+.detail-section p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.detail-section strong {
+  color: #1A1A2E;
+  font-weight: 600;
+}
+
+.error-section {
+  background: #FFEBEE;
+  padding: 16px;
+  border-radius: 8px;
+  border-bottom: none;
+}
+
+.error-section p {
+  color: #C62828;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}

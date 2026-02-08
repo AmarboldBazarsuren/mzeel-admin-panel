@@ -1,0 +1,64 @@
+/* admin-panel/src/pages/users/UsersPage.css */
+
+.users-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filters-section {
+  margin-bottom: 24px;
+  max-width: 400px;
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #E53935;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1A1A2E;
+  margin-bottom: 2px;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #666;
+}
+
+.pagination {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.page-info {
+  font-size: 14px;
+  color: #666;
+  min-width: 60px;
+  text-align: center;
+}

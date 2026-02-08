@@ -1,0 +1,36 @@
+/* admin-panel/src/pages/transactions/TransactionsPage.css */
+
+.transactions-page {
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.type-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.type-icon {
+  font-size: 18px;
+}
+
+.amount-positive {
+  color: #4CAF50;
+  font-weight: 700;
+}
+
+.amount-negative {
+  color: #E53935;
+  font-weight: 700;
+}
+
+.description-text {
+  font-size: 13px;
+  color: #666;
+  max-width: 200px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

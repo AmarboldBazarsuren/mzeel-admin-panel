@@ -1,0 +1,28 @@
+/* admin-panel/src/components/common/Card.css */
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+  border: 1px solid #f0f0f0;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+button.card {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.card-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A1A2E;
+}
