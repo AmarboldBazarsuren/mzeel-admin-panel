@@ -60,8 +60,8 @@ export default function LoanDetailPage() {
   const handleApprove = async () => {
     const amount = parseInt(approveAmount);
 
-    if (!amount || amount < 10000 || amount > 500000) {
-      alert('Зээлийн дүн 10,000₮ - 500,000₮ хооронд байх ёстой');
+    if (!amount || amount < 10000 || amount > 5000000) {
+      alert('Зээлийн дүн 10,000₮ - 5,000,000₮ хооронд байх ёстой');
       return;
     }
 
