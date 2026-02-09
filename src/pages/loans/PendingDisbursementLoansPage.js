@@ -1,157 +1,128 @@
 // admin-panel/src/pages/loans/PendingDisbursementLoansPage.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; // ✅ useCallback нэмсэн
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/client';
-import './LoansPage.css';
+import { api } from '../../api/client';
+import Table from '../../components/common/Table';
+import Button from '../../components/common/Button';
+import Badge from '../../components/common/Badge';
+import { formatCurrency, formatDate } from '../../utils/formatters';
+import './PendingVerificationLoansPage.css';
 
 export default function PendingDisbursementLoansPage() {
   const navigate = useNavigate();
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pages: 1,
-    total: 0
-  });
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
 
-  useEffect(() => {
-    loadLoans();
-  }, [pagination.page]);
-
-  const loadLoans = async () => {
+  // ✅ ЗАСВАРЛАСАН: useCallback ашигласан
+  const loadLoans = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.getPendingDisbursementLoans(pagination.page);
-      
+      const response = await api.getPendingDisbursementLoans(page);
+
       if (response.success) {
         setLoans(response.data.loans);
         setPagination(response.data.pagination);
       }
     } catch (error) {
-      console.error('Зээл татахад алдаа:', error);
-      alert('Зээл татахад алдаа гарлаа');
+      console.error('Loans load error:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]); // ✅ page-ээс хамааралтай
 
-  const handleViewLoan = (loanId) => {
-    navigate(`/loans/${loanId}`);
-  };
+  useEffect(() => {
+    loadLoans();
+  }, [loadLoans]); // ✅ loadLoans-г dependency-д нэмсэн
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('mn-MN', {
-      style: 'currency',
-      currency: 'MNT',
-      minimumFractionDigits: 0
-    }).replace('MNT', '₮');
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('mn-MN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="loans-page">
-        <div className="page-header">
-          <h1>🏦 Зээл авах хүсэлт</h1>
+  const columns = [
+    {
+      header: 'Дугаар',
+      field: 'loanNumber',
+      width: '150px',
+    },
+    {
+      header: 'Хэрэглэгч',
+      field: 'user',
+      render: (loan) => (
+        <div>
+          <div className="user-name-small">
+            {loan.user?.lastName} {loan.user?.firstName}
+          </div>
+          <div className="user-phone-small">{loan.user?.phone}</div>
         </div>
-        <div className="loading">Ачааллаж байна...</div>
-      </div>
-    );
-  }
+      ),
+    },
+    {
+      header: 'Хүссэн дүн',
+      field: 'requestedAmount',
+      render: (loan) => formatCurrency(loan.requestedAmount),
+    },
+    {
+      header: 'Зөвшөөрсөн дүн',
+      field: 'approvedAmount',
+      render: (loan) => formatCurrency(loan.approvedAmount),
+    },
+    {
+      header: 'Үүссэн огноо',
+      field: 'createdAt',
+      render: (loan) => formatDate(loan.createdAt),
+    },
+    {
+      header: 'Төлөв',
+      field: 'status',
+      render: () => (
+        <Badge variant="info">Зээл олгох хүлээгдэж байна</Badge>
+      ),
+    },
+    {
+      header: '',
+      field: 'actions',
+      width: '120px',
+      render: (loan) => (
+        <Button size="small" onClick={() => navigate(`/loans/${loan._id}`)}>
+          Дэлгэрэнгүй
+        </Button>
+      ),
+    },
+  ];
 
   return (
-    <div className="loans-page">
+    <div className="pending-verification-loans-page">
       <div className="page-header">
-        <h1>🏦 Зээл авах хүсэлт</h1>
-        <div className="header-stats">
-          <div className="stat-badge">
-            <span className="stat-label">Нийт хүсэлт:</span>
-            <span className="stat-value">{pagination.total}</span>
-          </div>
-        </div>
+        <h1 className="page-heading">Зээл авах хүсэлтүүд</h1>
+        <p className="page-subtitle">Хэрэглэгчид зээл авах хүсэлт илгээсэн</p>
       </div>
 
-      {loans.length === 0 ? (
-        <div className="empty-state">
-          <p>Зээл авах хүсэлт байхгүй байна</p>
-        </div>
+      {loading ? (
+        <div className="loading">Ачааллаж байна...</div>
       ) : (
         <>
-          <div className="table-container">
-            <table className="loans-table">
-              <thead>
-                <tr>
-                  <th>Зээлийн дугаар</th>
-                  <th>Хэрэглэгч</th>
-                  <th>Утас</th>
-                  <th>Зээлийн дүн</th>
-                  <th>Хүү</th>
-                  <th>Хугацаа</th>
-                  <th>Хүсэлт илгээсэн</th>
-                  <th>Үйлдэл</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loans.map((loan) => (
-                  <tr key={loan._id}>
-                    <td>
-                      <strong>{loan.loanNumber}</strong>
-                    </td>
-                    <td>
-                      {loan.user?.firstName} {loan.user?.lastName}
-                    </td>
-                    <td>{loan.user?.phone}</td>
-                    <td>
-                      <strong className="amount-primary">
-                        {formatCurrency(loan.approvedAmount)}
-                      </strong>
-                    </td>
-                    <td>{loan.interestRate}%</td>
-                    <td>{loan.term} хоног</td>
-                    <td className="date-small">
-                      {formatDate(loan.createdAt)}
-                    </td>
-                    <td>
-                      <button
-                        className="btn-view"
-                        onClick={() => handleViewLoan(loan._id)}
-                      >
-                        Дэлгэрэнгүй
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table columns={columns} data={loans} />
 
-          {pagination.pages > 1 && (
+          {pagination && pagination.pages > 1 && (
             <div className="pagination">
-              <button
-                disabled={pagination.page === 1}
-                onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+              <Button
+                variant="outline"
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
               >
-                Өмнөх
-              </button>
-              <span>
-                Хуудас {pagination.page} / {pagination.pages}
+                ← Өмнөх
+              </Button>
+
+              <span className="page-info">
+                {page} / {pagination.pages}
               </span>
-              <button
-                disabled={pagination.page === pagination.pages}
-                onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+
+              <Button
+                variant="outline"
+                disabled={page === pagination.pages}
+                onClick={() => setPage(page + 1)}
               >
-                Дараах
-              </button>
+                Дараах →
+              </Button>
             </div>
           )}
         </>

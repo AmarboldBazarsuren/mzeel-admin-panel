@@ -58,22 +58,24 @@ export const api = {
   // ✅ Profiles
   getPendingProfiles: (page) => client.get(`/admin/profiles/pending?page=${page}`),
   getProfileDetails: (id) => client.get(`/admin/profiles/${id}`),
-  verifyProfile: (id) => client.put(`/admin/profiles/${id}/verify`), // ✅ Body хоосон байх
+  verifyProfile: (id) => client.put(`/admin/profiles/${id}/verify`),
   rejectProfile: (id, data) => client.put(`/admin/profiles/${id}/reject`, data),
 
   // ✅ Loan Verification
   getPendingVerificationLoans: (page) => 
     client.get(`/admin/loans/pending-verification?page=${page}`),
   startLoanReview: (id) => client.put(`/admin/loans/${id}/start-review`),
-getPendingDisbursementLoans: (page) => 
-  client.get(`/admin/loans/pending-disbursement?page=${page}`),
+  
+  // ✅ НЭМСЭН: Зээл олгох хүсэлтүүд
+  getPendingDisbursementLoans: (page) => 
+    client.get(`/admin/loans/pending-disbursement?page=${page}`),
+
   // Loans
   getAllLoans: (page, status) => 
     client.get(`/loans/admin/all?page=${page}${status ? `&status=${status}` : ''}`),
   getLoanDetails: (id) => client.get(`/loans/${id}`),
   approveLoan: (id, data) => client.put(`/loans/${id}/approve`, data),
   approveLoanDisbursement: (id) => client.put(`/loans/${id}/approve-disbursement`),
-
   rejectLoan: (id, data) => client.put(`/loans/${id}/reject`, data),
 
   // Withdrawals

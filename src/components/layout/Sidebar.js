@@ -20,10 +20,10 @@ const menuItems = [
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="logo">
-          <div className="logo-icon">M</div>
-          <span className="logo-text">credit Admin</span>
-        </div>
+       <div className="logo">
+  <div className="logo-icon">X</div>
+  <span className="logo-text">ZeelX Admin</span>
+</div>
       </div>
 
       <nav className="sidebar-nav">

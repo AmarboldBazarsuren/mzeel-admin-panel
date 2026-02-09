@@ -39,12 +39,12 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-header">
-          <div className="logo-large">
-            <div className="logo-icon-large">M</div>
-          </div>
-          <h1>Mcredit Admin</h1>
-          <p>Админ панел руу нэвтрэх</p>
-        </div>
+  <div className="logo-large">
+    <div className="logo-icon-large">X</div>
+  </div>
+  <h1>ZeelX Admin</h1>
+  <p>Админ панел руу нэвтрэх</p>
+</div>
 
         <form className="login-form" onSubmit={handleSubmit}>
           {error && (
